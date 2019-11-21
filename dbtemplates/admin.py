@@ -1,4 +1,7 @@
 import posixpath
+
+from ckeditor.fields import RichTextField
+
 from django import forms
 from django.contrib import admin
 from django.core.exceptions import ImproperlyConfigured
@@ -61,29 +64,14 @@ if settings.DBTEMPLATES_USE_CODEMIRROR and settings.DBTEMPLATES_USE_TINYMCE:
                                "with dbtemplates, not both. Please disable "
                                "one of them.")
 
-    
-if settings.DBTEMPLATES_USE_CODEMIRROR:
-    TemplateContentTextArea = CodeMirrorTextArea
-elif settings.DBTEMPLATES_USE_TINYMCE:
-    from tinymce.widgets import AdminTinyMCE
-    TemplateContentTextArea = AdminTinyMCE
-elif settings.DBTEMPLATES_USE_CKEDITOR:
-    from ckeditor.widgets import CKEditorWidget
-    TemplateContentTextArea = CKEditorWidget
-elif settings.DBTEMPLATES_USE_REDACTOR:
-    from redactor.widgets import RedactorEditor
-    TemplateContentTextArea = RedactorEditor
-else:
-    TemplateContentTextArea = forms.Textarea
-
 
 class TemplateAdminForm(forms.ModelForm):
 
     """
     Custom AdminForm to make the content textarea wider.
     """
-    content = forms.CharField(
-        widget=TemplateContentTextArea(attrs={'rows': '24'}),
+    content = RichTextField(
+        config_name='awesome_ckeditor',
         help_text=content_help_text, required=False)
 
     class Meta:
