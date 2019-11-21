@@ -49,12 +49,6 @@ class CodeMirrorTextArea(forms.Textarea):
 """ % dict(media_prefix=settings.DBTEMPLATES_MEDIA_PREFIX, name=name))
         return mark_safe(u"".join(result))
 
-
-if settings.DBTEMPLATES_USE_CODEMIRROR:
-    TemplateContentTextArea = CodeMirrorTextArea
-else:
-    TemplateContentTextArea = forms.Textarea
-
 if settings.DBTEMPLATES_AUTO_POPULATE_CONTENT:
     content_help_text = _("Leaving this empty causes Django to look for a "
                           "template with the given name and populate this "
@@ -67,12 +61,20 @@ if settings.DBTEMPLATES_USE_CODEMIRROR and settings.DBTEMPLATES_USE_TINYMCE:
                                "with dbtemplates, not both. Please disable "
                                "one of them.")
 
-if settings.DBTEMPLATES_USE_TINYMCE:
+    
+if settings.DBTEMPLATES_USE_CODEMIRROR:
+    TemplateContentTextArea = CodeMirrorTextArea
+elif settings.DBTEMPLATES_USE_TINYMCE:
     from tinymce.widgets import AdminTinyMCE
     TemplateContentTextArea = AdminTinyMCE
+elif settings.DBTEMPLATES_USE_CKEDITOR:
+    from ckeditor.widgets import CKEditorWidget
+    TemplateContentTextArea = CKEditorWidget
 elif settings.DBTEMPLATES_USE_REDACTOR:
     from redactor.widgets import RedactorEditor
     TemplateContentTextArea = RedactorEditor
+else:
+    TemplateContentTextArea = forms.Textarea
 
 
 class TemplateAdminForm(forms.ModelForm):
