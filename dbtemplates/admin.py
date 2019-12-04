@@ -1,6 +1,6 @@
 import posixpath
 
-from ckeditor.fields import RichTextField
+from ckeditor.fields import RichTextFormField
 
 from django import forms
 from django.contrib import admin
@@ -70,7 +70,7 @@ class TemplateAdminForm(forms.ModelForm):
     """
     Custom AdminForm to make the content textarea wider.
     """
-    content = RichTextField(
+    content = RichTextFormField(
         config_name='awesome_ckeditor',
         help_text=content_help_text, required=False)
 
