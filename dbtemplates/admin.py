@@ -1,4 +1,7 @@
 import posixpath
+
+from ckeditor.fields import RichTextFormField
+
 from django import forms
 from django.contrib import admin
 from django.core.exceptions import ImproperlyConfigured
@@ -49,12 +52,6 @@ class CodeMirrorTextArea(forms.Textarea):
 """ % dict(media_prefix=settings.DBTEMPLATES_MEDIA_PREFIX, name=name))
         return mark_safe(u"".join(result))
 
-
-if settings.DBTEMPLATES_USE_CODEMIRROR:
-    TemplateContentTextArea = CodeMirrorTextArea
-else:
-    TemplateContentTextArea = forms.Textarea
-
 if settings.DBTEMPLATES_AUTO_POPULATE_CONTENT:
     content_help_text = _("Leaving this empty causes Django to look for a "
                           "template with the given name and populate this "
@@ -67,21 +64,14 @@ if settings.DBTEMPLATES_USE_CODEMIRROR and settings.DBTEMPLATES_USE_TINYMCE:
                                "with dbtemplates, not both. Please disable "
                                "one of them.")
 
-if settings.DBTEMPLATES_USE_TINYMCE:
-    from tinymce.widgets import AdminTinyMCE
-    TemplateContentTextArea = AdminTinyMCE
-elif settings.DBTEMPLATES_USE_REDACTOR:
-    from redactor.widgets import RedactorEditor
-    TemplateContentTextArea = RedactorEditor
-
 
 class TemplateAdminForm(forms.ModelForm):
 
     """
     Custom AdminForm to make the content textarea wider.
     """
-    content = forms.CharField(
-        widget=TemplateContentTextArea(attrs={'rows': '24'}),
+    content = RichTextFormField(
+        config_name='awesome_ckeditor',
         help_text=content_help_text, required=False)
 
     class Meta:

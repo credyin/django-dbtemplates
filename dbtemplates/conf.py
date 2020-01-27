@@ -11,6 +11,7 @@ class DbTemplatesConf(AppConf):
     USE_REVERSION = False
     USE_TINYMCE = False
     USE_REDACTOR = False
+    USE_CKEDITOR = False
     ADD_DEFAULT_SITE = True
     AUTO_POPULATE_CONTENT = True
     MEDIA_PREFIX = None
