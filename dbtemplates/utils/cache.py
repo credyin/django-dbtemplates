@@ -1,13 +1,14 @@
 from django.core import signals
 from django.contrib.sites.models import Site
 from django.template.defaultfilters import slugify
+from django.utils.module_loading import import_string
 
 from dbtemplates.conf import settings
 
 
 def get_cache_backend():
     """
-    Compatibilty wrapper for getting Django's cache backend instance
+    Compatibility wrapper for getting Django's cache backend instance
     """
     from django.core.cache import _create_cache
     cache = _create_cache(settings.DBTEMPLATES_CACHE_BACKEND)
@@ -18,7 +19,10 @@ def get_cache_backend():
     return cache
 
 
-cache = get_cache_backend()
+if settings.DEFAULT_CACHE_CLASS:
+    cache = import_string(settings.DEFAULT_CACHE_CLASS)
+else:
+    cache = get_cache_backend()
 
 
 def get_cache_key(name):
