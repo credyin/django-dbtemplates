@@ -14,8 +14,10 @@ from django.contrib.sites.models import Site
 from dbtemplates.conf import settings
 from dbtemplates.models import Template
 from dbtemplates.utils.cache import get_cache_backend, get_cache_key
-from dbtemplates.utils.template import (get_template_source,
-                                        check_template_syntax)
+from dbtemplates.utils.template import (
+    check_template_syntax,
+    get_template_source,
+)
 from dbtemplates.management.commands.sync_templates import (FILES_TO_DATABASE,
                                                             DATABASE_TO_FILES)
 

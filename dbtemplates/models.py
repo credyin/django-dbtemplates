@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 from dbtemplates.conf import settings
-from dbtemplates.utils.cache import (add_template_to_cache,
-                                     remove_cached_template)
+from dbtemplates.utils.cache import (
+    add_template_to_cache,
+    remove_cached_template
+)
 from dbtemplates.utils.template import get_template_source
+
 from django.contrib.sites.managers import CurrentSiteManager
 from django.contrib.sites.models import Site
 from django.db import models
@@ -14,33 +17,37 @@ from django.utils.timezone import now
 
 class Template(models.Model):
     """
+    Template Table.
+
     Defines a template model for use with the database template loader.
     The field ``name`` is the equivalent to the filename of a static template.
     """
-    name = models.CharField(_('name'), max_length=100,
-                            help_text=_("Example: 'flatpages/default.html'"))
+    name = models.CharField(
+        _('name'), max_length=100,
+        help_text=_("Example: 'flatpages/default.html'"))
     content = models.TextField(_('content'), blank=True)
-    sites = models.ManyToManyField(Site, verbose_name=_(u'sites'),
-                                   blank=True)
-    creation_date = models.DateTimeField(_('creation date'),
-                                         default=now)
-    last_changed = models.DateTimeField(_('last changed'),
-                                        default=now)
-
+    sites = models.ManyToManyField(Site, verbose_name=_(u'sites'), blank=True)
+    creation_date = models.DateTimeField(_('creation date'), default=now)
+    last_changed = models.DateTimeField(_('last changed'), default=now)
     objects = models.Manager()
     on_site = CurrentSiteManager('sites')
 
     class Meta:
+        """Model configurations."""
+
         db_table = 'django_template'
         verbose_name = _('template')
         verbose_name_plural = _('templates')
         ordering = ('name',)
 
     def __str__(self):
+        """Return the name of the template."""
         return self.name
 
     def populate(self, name=None):
         """
+        Populate a template with content.
+
         Tries to find a template with the same name and populates
         the content field if found.
         """
@@ -54,6 +61,7 @@ class Template(models.Model):
             pass
 
     def save(self, *args, **kwargs):
+        """Save the content of the template."""
         self.last_changed = now()
         # If content is empty look for a template with the given name and
         # populate the template instance with its content.
@@ -64,6 +72,8 @@ class Template(models.Model):
 
 def add_default_site(instance, **kwargs):
     """
+    Add the default site to the Template.
+
     Called via Django's signals to cache the templates, if the template
     in the database was added or changed, only if
     DBTEMPLATES_ADD_DEFAULT_SITE setting is set.
