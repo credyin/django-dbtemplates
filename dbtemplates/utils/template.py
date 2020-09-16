@@ -35,5 +35,5 @@ def check_template_syntax(template):
     try:
         Template(template.content)
     except TemplateSyntaxError as e:
-        return (False, e)
-    return (True, None)
+        return False, e
+    return True, None

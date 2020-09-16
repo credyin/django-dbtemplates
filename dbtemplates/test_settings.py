@@ -45,3 +45,5 @@ TEMPLATES = [
         }
     },
 ]
+
+DEFAULT_CACHE_CLASS = None

@@ -1,9 +1,10 @@
 import io
 import os
+
 from django.contrib.sites.models import Site
 from django.core.management.base import CommandError, BaseCommand
-from django.template.utils import get_app_template_dirs
 from django.template.loader import _engine_list
+from django.template.utils import get_app_template_dirs
 
 from dbtemplates.models import Template
 

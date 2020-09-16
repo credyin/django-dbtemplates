@@ -1,6 +1,7 @@
 from django.core import signals
 from django.contrib.sites.models import Site
 from django.template.defaultfilters import slugify
+from django.utils.module_loading import import_string
 
 from dbtemplates.conf import settings
 
@@ -16,7 +17,10 @@ def get_cache_backend():
     return cache
 
 
-cache = get_cache_backend()
+if settings.DEFAULT_CACHE_CLASS:
+    cache = import_string(settings.DEFAULT_CACHE_CLASS)
+else:
+    cache = get_cache_backend()
 
 
 def get_cache_key(name):
@@ -39,7 +43,7 @@ def set_and_return(cache_key, content, display_name):
     """Save in cache backend if manually deleted or invalidated."""
     if cache:
         cache.set(cache_key, content)
-    return (content, display_name)
+    return content, display_name
 
 
 def add_template_to_cache(instance, **kwargs):
