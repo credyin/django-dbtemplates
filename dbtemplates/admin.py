@@ -14,9 +14,12 @@ from dbtemplates.models import (
 )
 from dbtemplates.utils.template import check_template_syntax
 
-# Check if django-reversion is installed and use reversions
-# VersionAdmin as the base admin.
-if settings.DBTEMPLATES_USE_REVERSION:
+# Check if either django-reversion-compare or django-reversion is installed and
+# use reversion_compare's CompareVersionAdmin or reversion's VersionAdmin as
+# the base admin class if yes
+if settings.DBTEMPLATES_USE_REVERSION_COMPARE:
+    from reversion_compare.admin import CompareVersionAdmin as TemplateModelAdmin
+elif settings.DBTEMPLATES_USE_REVERSION:
     from reversion.admin import VersionAdmin as TemplateModelAdmin
 else:
     from django.contrib.admin import ModelAdmin as TemplateModelAdmin  # noqa
